@@ -282,15 +282,27 @@
 </div>
 
 <script>
-  const STORAGE_KEY = 'djon_farewell_v1';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwPxCbqvdLUu6UbxCji7_9wH7XdI4qOqh6FeV5T7kxMWNLzb9HQF6Zcrkvg-vxXi1V9/exec';
   const FOOD_ICONS = ['&#x1F372;','&#x1F958;','&#x1F371;','&#x1F957;','&#x1F370;','&#x1F35C;','&#x1F35B;','&#x2615;','&#x1F9C1;','&#x1F969;','&#x1F362;','&#x1F9C6;'];
   const IS_ADMIN = new URLSearchParams(window.location.search).get('adminCha') === 'true';
 
-  function getData() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { rsvps: [], food: [] }; }
-    catch { return { rsvps: [], food: [] }; }
+  async function fetchData() {
+    try {
+      const res = await fetch(API_URL);
+      return await res.json();
+    } catch { return { rsvps: [], food: [] }; }
   }
-  function saveData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+  async function postData(payload) {
+    try {
+      await fetch(API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch(e) { console.error(e); }
+  }
 
   // COUNTDOWN
   const target = new Date('2026-04-11T10:00:00');
@@ -314,8 +326,8 @@
   updateCountdown();
 
   // RENDER
-  function render() {
-    const { rsvps, food } = getData();
+  async function render() {
+    const { rsvps, food } = await fetchData();
 
     // Stats
     document.getElementById('stat-yes').textContent = rsvps.filter(r => r.attending === 'yes').length;
@@ -332,7 +344,7 @@
           <span style="font-weight:600">${r.name}</span>
           <span style="display:flex;align-items:center;gap:8px;">
             <span class="rsvp-badge badge-${r.attending}">${r.attending === 'yes' ? '&#x2713; Joining' : r.attending === 'no' ? '&#x2717; Can\'t Make It' : '~ Maybe'}</span>
-            ${IS_ADMIN ? `<button class="rsvp-delete" onclick="deleteRSVP(${i})" title="Remove">🗑️</button>` : ''}
+            ${IS_ADMIN ? `<button class="rsvp-delete" onclick="deleteRSVP('${r.name}')" title="Remove">🗑️</button>` : ''}
           </span>
         </div>`).join('');
     }
@@ -344,7 +356,7 @@
     } else {
       grid.innerHTML = food.map((f, i) => `
         <div class="food-card">
-          ${IS_ADMIN ? `<button class="food-delete" onclick="deleteFood(${i})" title="Remove">🗑️</button>` : ''}
+          ${IS_ADMIN ? `<button class="food-delete" onclick="deleteFood('${f.name}')" title="Remove">🗑️</button>` : ''}
           <div class="fc-icon">${FOOD_ICONS[i % FOOD_ICONS.length]}</div>
           <div class="fc-name">${f.name}</div>
           <div class="fc-food">${f.food}</div>
@@ -368,55 +380,50 @@
   }
 
   // Delete RSVP
-  function deleteRSVP(index) {
+  async function deleteRSVP(name) {
     if (!confirm('Remove this RSVP?')) return;
-    const data = getData();
-    data.rsvps.splice(index, 1);
-    saveData(data);
-    render();
+    await postData({ type: 'delete_rsvp', name });
+    setTimeout(render, 1000);
   }
 
   // RSVP submit
-  document.getElementById('rsvp-form').addEventListener('submit', e => {
+  document.getElementById('rsvp-form').addEventListener('submit', async e => {
     e.preventDefault();
     const name = document.getElementById('rsvp-name').value.trim();
     const attending = document.getElementById('rsvp-attending').value;
     if (!name || !attending) return;
-    const data = getData();
-    const idx = data.rsvps.findIndex(r => r.name.toLowerCase() === name.toLowerCase());
-    if (idx >= 0) data.rsvps[idx] = { name, attending };
-    else data.rsvps.push({ name, attending });
-    saveData(data);
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Sending...';
+    await postData({ type: 'rsvp', name, attending });
     document.getElementById('rsvp-success').style.display = 'block';
     document.getElementById('rsvp-form').reset();
+    ['yes','maybe','no'].forEach(v => { document.getElementById('btn-'+v).style.cssText = ''; });
+    btn.disabled = false; btn.textContent = 'Send My RSVP';
     setTimeout(() => document.getElementById('rsvp-success').style.display = 'none', 3000);
-    render();
+    setTimeout(render, 1200);
   });
 
   // Delete Food
-  function deleteFood(index) {
+  async function deleteFood(name) {
     if (!confirm('Remove this entry?')) return;
-    const data = getData();
-    data.food.splice(index, 1);
-    saveData(data);
-    render();
+    await postData({ type: 'delete_food', name });
+    setTimeout(render, 1000);
   }
 
   // Food submit
-  document.getElementById('food-form').addEventListener('submit', e => {
+  document.getElementById('food-form').addEventListener('submit', async e => {
     e.preventDefault();
     const name = document.getElementById('food-name').value.trim();
     const food = document.getElementById('food-item').value.trim();
     if (!name || !food) return;
-    const data = getData();
-    const idx = data.food.findIndex(f => f.name.toLowerCase() === name.toLowerCase());
-    if (idx >= 0) data.food[idx] = { name, food };
-    else data.food.push({ name, food });
-    saveData(data);
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Sending...';
+    await postData({ type: 'food', name, food });
     document.getElementById('food-success').style.display = 'block';
     document.getElementById('food-form').reset();
+    btn.disabled = false; btn.textContent = "I'm Bringing This!";
     setTimeout(() => document.getElementById('food-success').style.display = 'none', 3000);
-    render();
+    setTimeout(render, 1200);
   });
 
   render();
