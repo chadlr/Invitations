@@ -551,7 +551,19 @@
     // Set contentEditable on all [data-editable] elements
     document.querySelectorAll('[data-editable]').forEach(el => {
       el.contentEditable = 'true';
+      // If inside a button, stop clicks from bubbling to the button's onclick
+      if (el.closest('button')) {
+        el.addEventListener('click', e => e.stopPropagation());
+        el.addEventListener('mousedown', e => e.stopPropagation());
+      }
     });
+    // Disable attendance button onclicks in admin mode so their spans are editable
+    ['yes','maybe','no'].forEach(v => {
+      const btn = document.getElementById('btn-' + v);
+      if (btn) { btn.setAttribute('data-orig-onclick', btn.getAttribute('onclick')); btn.removeAttribute('onclick'); }
+    });
+    // Prevent submit buttons from submitting in admin mode
+    document.querySelectorAll('button[type="submit"]').forEach(btn => { btn.type = 'button'; });
     // Add placeholder editor inputs below each [data-placeholder-key] element
     document.querySelectorAll('[data-placeholder-key]').forEach(el => {
       const phKey = el.getAttribute('data-placeholder-key');
