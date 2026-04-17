@@ -362,7 +362,10 @@
       title="Set the countdown target date & time" />
   </label>
   <span id="admin-saved-msg">✅ Saved!</span>
-  <button id="admin-save-btn" onclick="saveAdminChanges()">💾 Save Changes</button>
+  <span id="admin-publish-msg" style="display:none;color:#c8e6c9;font-size:13px;">🚀 Published!</span>
+  <span id="admin-publish-err" style="display:none;color:#ff8a80;font-size:13px;"></span>
+  <button id="admin-save-btn" onclick="saveAdminChanges()">💾 Save</button>
+  <button id="admin-publish-btn" onclick="publishToGitHub()" style="background:linear-gradient(135deg,#388e3c,#1b5e20);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.5px;margin-left:8px;">🚀 Publish</button>
 </div>
 
 <script>
@@ -612,7 +615,100 @@
     setTimeout(() => { msg.style.display = 'none'; }, 2500);
   }
 
-  function editRSVP(name, attending) {
+  async function publishToGitHub() {
+    const GH_TOKEN_KEY = 'djon_gh_token';
+    const owner = 'chadlr', repo = 'Invitations', branch = '20260411_djon_sendoff_partey', path = 'index.html';
+    const errEl = document.getElementById('admin-publish-err');
+    const okEl  = document.getElementById('admin-publish-msg');
+    errEl.style.display = 'none';
+
+    // Get or ask for token
+    let token = localStorage.getItem(GH_TOKEN_KEY);
+    if (!token) {
+      token = prompt('Enter your GitHub Personal Access Token (repo scope).\nIt will be saved locally — never pushed to GitHub.');
+      if (!token) return;
+      localStorage.setItem(GH_TOKEN_KEY, token);
+    }
+
+    const btn = document.getElementById('admin-publish-btn');
+    btn.disabled = true; btn.textContent = '⏳ Publishing...';
+
+    try {
+      // 1. Save current edits to localStorage first
+      saveAdminChanges();
+
+      // 2. Fetch current file from GitHub to get SHA
+      const metaRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`, {
+        headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+      });
+      if (!metaRes.ok) throw new Error('Could not fetch file (status ' + metaRes.status + '). Check your token.');
+      const meta = await metaRes.json();
+      const currentSha = meta.sha;
+
+      // 3. Decode current HTML from GitHub
+      const decoded = decodeURIComponent(escape(atob(meta.content.replace(/\n/g,''))));
+
+      // 4. Parse into a DOM so we can apply overrides cleanly
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(decoded, 'text/html');
+
+      // 5. Apply all saved text overrides
+      const saved = localStorage.getItem(ADMIN_CONTENT_KEY);
+      if (saved) {
+        const overrides = JSON.parse(saved);
+        Object.keys(overrides).forEach(key => {
+          if (key.startsWith('__ph__')) {
+            const el = doc.querySelector('[data-placeholder-key="' + key.slice(6) + '"]');
+            if (el) el.setAttribute('placeholder', overrides[key]);
+          } else {
+            const el = doc.querySelector('[data-editable="' + key + '"]');
+            if (el) el.innerHTML = overrides[key];
+          }
+        });
+      }
+
+      // 6. Bake in countdown date default
+      let htmlStr = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+      const savedDate = localStorage.getItem(COUNTDOWN_DATE_KEY);
+      if (savedDate) {
+        htmlStr = htmlStr.replace(
+          /const DEFAULT_COUNTDOWN_DATE = '[^']*'/,
+          "const DEFAULT_COUNTDOWN_DATE = '" + savedDate + "'"
+        );
+      }
+
+      // 7. Encode as base64 UTF-8
+      const bytes = new TextEncoder().encode(htmlStr);
+      let binary = '';
+      bytes.forEach(b => binary += String.fromCharCode(b));
+      const encoded = btoa(binary);
+
+      // 8. Push to GitHub
+      const pushRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+        method: 'PUT',
+        headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Admin: publish content edits', content: encoded, sha: currentSha, branch })
+      });
+      if (!pushRes.ok) {
+        const err = await pushRes.json();
+        throw new Error(err.message || 'Push failed');
+      }
+
+      okEl.style.display = 'inline';
+      setTimeout(() => { okEl.style.display = 'none'; }, 3000);
+
+    } catch(e) {
+      // If token was wrong, clear it so user can re-enter next time
+      if (e.message.includes('401') || e.message.includes('token')) localStorage.removeItem(GH_TOKEN_KEY);
+      errEl.textContent = '❌ ' + e.message;
+      errEl.style.display = 'inline';
+      setTimeout(() => { errEl.style.display = 'none'; }, 5000);
+    } finally {
+      btn.disabled = false; btn.textContent = '🚀 Publish';
+    }
+  }
+
+
     document.getElementById('rsvp-name').value = name;
     selectAttending(attending);
     document.getElementById('rsvp-form').scrollIntoView({ behavior: 'smooth' });
