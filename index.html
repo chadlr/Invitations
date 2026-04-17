@@ -185,36 +185,108 @@
     .section { padding: 22px 16px; }
     .hero { padding: 50px 16px 44px; }
   }
+
+  /* ADMIN MODE */
+  [contenteditable="true"] {
+    outline: 2px dashed rgba(200,169,126,0.6) !important;
+    border-radius: 4px;
+    cursor: text;
+    min-height: 1em;
+  }
+  body.admin-mode { padding-bottom: 60px; }
+  #admin-badge {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10001;
+    background: linear-gradient(135deg, #2c1810, #4a2c2a);
+    color: #c8a97e;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 7px;
+    font-weight: 600;
+  }
+  #admin-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 10000;
+    background: linear-gradient(135deg, #2c1810, #4a2c2a);
+    padding: 10px 20px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  #admin-saved-msg { display: none; color: #c8e6c9; font-size: 13px; }
+  #admin-save-btn {
+    background: linear-gradient(135deg, #c8a97e, #a07850);
+    color: #2c1810;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+  #admin-save-btn:hover { opacity: 0.85; }
+  .rsvp-edit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #2196F3;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .rsvp-edit:hover { color: #0d47a1; background: #e3f2fd; }
+  .food-edit {
+    position: absolute;
+    top: 8px; right: 38px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #00838f;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .food-edit:hover { color: #006064; background: #e0f7fa; }
 </style>
 </head>
 <body>
 
+<div id="admin-badge">✏️ Admin Mode Active — editable fields are highlighted</div>
+
 <div class="hero">
-  <div class="hero-badge">☕ A Send Off Gathering &nbsp;·&nbsp; Hosted by the ones he's leaving behind 😢</div>
+  <div class="hero-badge" data-editable="hero-badge">☕ A Send Off Gathering &nbsp;·&nbsp; Hosted by the ones he's leaving behind 😢</div>
   <div class="hero-sub">Raise your cups with</div>
-  <div class="hero-name">Djon Erul</div>
+  <div class="hero-name" data-editable="hero-name">Djon Erul</div>
   <hr style="border:none;border-top:1px solid rgba(255,255,255,0.25);width:60%;margin:18px auto;"/>
-  <h1><span>One Last Brew</span><br/>Before He Hits Lightspeed</h1>
+  <h1 data-editable="hero-h1"><span>One Last Brew</span><br/>Before He Hits Lightspeed</h1>
   <div class="hero-transition">
     <div class="company-pill">
-      <span class="co-name">&#x1F52C; Intel Malaysia</span>
-      <span class="co-desc">Bayan Lepas</span>
+      <span class="co-name" data-editable="co1-name">&#x1F52C; Intel Malaysia</span>
+      <span class="co-desc" data-editable="co1-desc">Bayan Lepas</span>
     </div>
     <div class="arrow-pill">&#x2192; &#x1F4E1; &#x2192;</div>
     <div class="company-pill">
-      <span class="co-name">&#x1F4A1; Lumilens Thailand</span>
-      <span class="co-desc">Bangkok</span>
+      <span class="co-name" data-editable="co2-name">&#x1F4A1; Lumilens Thailand</span>
+      <span class="co-desc" data-editable="co2-desc">Bangkok</span>
     </div>
   </div>
-  <div class="hero-date">April 11&#x2013;12, 2026 &nbsp;&#xB7;&nbsp; Somewhere in Ipoh, Perak &nbsp;<a href="https://www.airbnb.com/rooms/1613632396736680588?guests=1&adults=1&s=67&unique_share_id=367f25f4-410d-4d71-820a-e5301b7e5e85" target="_blank" style="color:var(--latte);text-decoration:underline;">📍 Airbnb</a></div>
+  <div class="hero-date" data-editable="hero-date">April 11&#x2013;12, 2026 &nbsp;&#xB7;&nbsp; Somewhere in Ipoh, Perak &nbsp;<a href="https://www.airbnb.com/rooms/1613632396736680588?guests=1&adults=1&s=67&unique_share_id=367f25f4-410d-4d71-820a-e5301b7e5e85" target="_blank" style="color:var(--latte);text-decoration:underline;">📍 Airbnb</a></div>
 </div>
 
 <div class="container">
 
   <!-- COUNTDOWN -->
   <div class="section">
-    <div class="section-title">&#x23F3; Counting Down</div>
-    <div class="section-sub">Until we raise our cups for Djon</div>
+    <div class="section-title" data-editable="title-1">&#x23F3; Counting Down</div>
+    <div class="section-sub" data-editable="sub-1">Until we raise our cups for Djon</div>
     <div class="countdown-wrap" id="countdown">
       <div class="cd-box"><div class="cd-num" id="cd-days">--</div><div class="cd-label">Days</div></div>
       <div class="cd-box"><div class="cd-num" id="cd-hours">--</div><div class="cd-label">Hours</div></div>
@@ -226,18 +298,18 @@
 
   <!-- DETAILS -->
   <div class="section">
-    <div class="section-title">&#x1F4CD; The Details</div>
-    <div class="section-sub">Mark your calendars and come as you are</div>
-    <div class="detail-row"><div class="detail-icon">&#x1F4C5;</div><div><div class="detail-label">When</div><div class="detail-value">April 11&#x2013;12, 2026</div></div></div>
-    <div class="detail-row"><div class="detail-icon">&#x1F4CD;</div><div><div class="detail-label">Where</div><div class="detail-value">Somewhere in Ipoh, Perak &nbsp;<a href="https://www.airbnb.com/rooms/1613632396736680588?guests=1&adults=1&s=67&unique_share_id=367f25f4-410d-4d71-820a-e5301b7e5e85" target="_blank" style="color:var(--mocha);text-decoration:underline;">📍 Airbnb</a></div></div></div>
-    <div class="detail-row"><div class="detail-icon">&#x2615;</div><div><div class="detail-label">Vibe</div><div class="detail-value">Cafe-style, relaxed, good company</div></div></div>
-    <div class="detail-row"><div class="detail-icon">&#x1F4E1;</div><div><div class="detail-label">Why</div><div class="detail-value">Sending off Djon as he tunes into a new frequency in Thailand</div></div></div>
+    <div class="section-title" data-editable="title-2">&#x1F4CD; The Details</div>
+    <div class="section-sub" data-editable="sub-2">Mark your calendars and come as you are</div>
+    <div class="detail-row"><div class="detail-icon">&#x1F4C5;</div><div><div class="detail-label">When</div><div class="detail-value" data-editable="detail-when">April 11&#x2013;12, 2026</div></div></div>
+    <div class="detail-row"><div class="detail-icon">&#x1F4CD;</div><div><div class="detail-label">Where</div><div class="detail-value" data-editable="detail-where">Somewhere in Ipoh, Perak &nbsp;<a href="https://www.airbnb.com/rooms/1613632396736680588?guests=1&adults=1&s=67&unique_share_id=367f25f4-410d-4d71-820a-e5301b7e5e85" target="_blank" style="color:var(--mocha);text-decoration:underline;">📍 Airbnb</a></div></div></div>
+    <div class="detail-row"><div class="detail-icon">&#x2615;</div><div><div class="detail-label">Vibe</div><div class="detail-value" data-editable="detail-vibe">Cafe-style, relaxed, good company</div></div></div>
+    <div class="detail-row"><div class="detail-icon">&#x1F4E1;</div><div><div class="detail-label">Why</div><div class="detail-value" data-editable="detail-why">Sending off Djon as he tunes into a new frequency in Thailand</div></div></div>
   </div>
 
   <!-- RSVP -->
   <div class="section">
-    <div class="section-title">&#x1FA91; Will You Join Us?</div>
-    <div class="section-sub">Let us know so we can save you a seat and a cup</div>
+    <div class="section-title" data-editable="title-3">&#x1FA91; Will You Join Us?</div>
+    <div class="section-sub" data-editable="sub-3">Let us know so we can save you a seat and a cup</div>
     <div class="stats-row">
       <div class="stat-box"><div class="stat-num" id="stat-yes">0</div><div class="stat-label">Joining</div></div>
       <div class="stat-box"><div class="stat-num" id="stat-maybe">0</div><div class="stat-label">Maybe</div></div>
@@ -263,8 +335,8 @@
 
   <!-- FOOD -->
   <div class="section">
-    <div class="section-title">&#x1F372; Bringing Something?</div>
-    <div class="section-sub">Let us know what you plan to bring or cook &#x2014; the more the merrier! Update anytime if your plans change.</div>
+    <div class="section-title" data-editable="title-4">&#x1F372; Bringing Something?</div>
+    <div class="section-sub" data-editable="sub-4">Let us know what you plan to bring or cook &#x2014; the more the merrier! Update anytime if your plans change.</div>
     <form id="food-form">
       <div class="form-group"><label>Your Name</label><input type="text" id="food-name" placeholder="e.g. the-one-lumilens-wishes-they-hired-too-Chan" required/></div>
       <div class="form-group"><label>What will you bring or cook?</label><textarea id="food-item" placeholder="e.g. Chicken curry, Kueh, Brownies..." required></textarea></div>
@@ -277,8 +349,8 @@
 </div>
 
 <div class="footer">
-  &#x2615; One Last Brew before Djon tunes into a new frequency &nbsp;&#xB7;&nbsp; Ipoh, April 2026<br/>
-  <span style="opacity:0.5;">With love, from Gboys &#x1F4E1;</span>
+  <span data-editable="footer-line1">&#x2615; One Last Brew before Djon tunes into a new frequency &nbsp;&#xB7;&nbsp; Ipoh, April 2026</span><br/>
+  <span data-editable="footer-line2" style="opacity:0.5;">With love, from Gboys &#x1F4E1;</span>
 </div>
 
 <script>
@@ -344,7 +416,7 @@
           <span style="font-weight:600">${r.name}</span>
           <span style="display:flex;align-items:center;gap:8px;">
             <span class="rsvp-badge badge-${r.attending}">${r.attending === 'yes' ? '&#x2713; Joining' : r.attending === 'no' ? '&#x2717; Can\'t Make It' : '~ Maybe'}</span>
-            ${IS_ADMIN ? `<button class="rsvp-delete" onclick="deleteRSVP('${r.name}')" title="Remove">🗑️</button>` : ''}
+            ${IS_ADMIN ? `<button class="rsvp-edit" onclick="editRSVP('${r.name}', '${r.attending}')" title="Edit">✏️</button><button class="rsvp-delete" onclick="deleteRSVP('${r.name}')" title="Remove">🗑️</button>` : ''}
           </span>
         </div>`).join('');
     }
@@ -356,7 +428,7 @@
     } else {
       grid.innerHTML = food.map((f, i) => `
         <div class="food-card">
-          ${IS_ADMIN ? `<button class="food-delete" onclick="deleteFood('${f.name}')" title="Remove">🗑️</button>` : ''}
+          ${IS_ADMIN ? `<button class="food-edit" onclick="editFood('${f.name}', '${f.food.replace(/'/g, '&#39;')}')" title="Edit">✏️</button><button class="food-delete" onclick="deleteFood('${f.name}')" title="Remove">🗑️</button>` : ''}
           <div class="fc-icon">${FOOD_ICONS[i % FOOD_ICONS.length]}</div>
           <div class="fc-name">${f.name}</div>
           <div class="fc-food">${f.food}</div>
@@ -426,7 +498,58 @@
     setTimeout(render, 1200);
   });
 
+
+  // ── ADMIN MODE ──────────────────────────────────────────────────────────────
+  const ADMIN_CONTENT_KEY = 'djon_admin_content_v1';
+
+  function initAdminMode() {
+    if (!IS_ADMIN) return;
+    document.body.classList.add('admin-mode');
+    document.getElementById('admin-badge').style.display = 'block';
+    const bar = document.getElementById('admin-bar');
+    bar.style.display = 'flex';
+    // Load saved content from localStorage and apply innerHTML
+    const saved = localStorage.getItem(ADMIN_CONTENT_KEY);
+    if (saved) {
+      try {
+        const overrides = JSON.parse(saved);
+        Object.keys(overrides).forEach(key => {
+          const el = document.querySelector('[data-editable="' + key + '"]');
+          if (el) el.innerHTML = overrides[key];
+        });
+      } catch(e) { console.error('Admin content load error:', e); }
+    }
+    // Set contentEditable on all [data-editable] elements
+    document.querySelectorAll('[data-editable]').forEach(el => {
+      el.contentEditable = 'true';
+    });
+  }
+
+  function saveAdminChanges() {
+    const overrides = {};
+    document.querySelectorAll('[data-editable]').forEach(el => {
+      overrides[el.getAttribute('data-editable')] = el.innerHTML;
+    });
+    localStorage.setItem(ADMIN_CONTENT_KEY, JSON.stringify(overrides));
+    const msg = document.getElementById('admin-saved-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => { msg.style.display = 'none'; }, 2500);
+  }
+
+  function editRSVP(name, attending) {
+    document.getElementById('rsvp-name').value = name;
+    selectAttending(attending);
+    document.getElementById('rsvp-form').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function editFood(name, food) {
+    document.getElementById('food-name').value = name;
+    document.getElementById('food-item').value = food;
+    document.getElementById('food-form').scrollIntoView({ behavior: 'smooth' });
+  }
+
   render();
+  initAdminMode();
 </script>
 
 <!-- KITTENS -->
@@ -650,5 +773,11 @@
   btnNo   .addEventListener('click', () => runAnimation('fight'));
 })();
 </script>
+
+<div id="admin-bar">
+  <span style="color:#c8a97e;font-size:13px;font-weight:600;letter-spacing:1px;">✏️ Admin Mode</span>
+  <span id="admin-saved-msg">✅ Saved!</span>
+  <button id="admin-save-btn" onclick="saveAdminChanges()">💾 Save Changes</button>
+</div>
 </body>
 </html>
