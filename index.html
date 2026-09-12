@@ -724,7 +724,7 @@
 
 <!-- KITTENS -->
 <style>
-  .kitten { position:fixed; font-size:40px; z-index:9999; user-select:none; pointer-events:auto; cursor:pointer; transition:transform 0.15s; filter:sepia(1) saturate(3) hue-rotate(5deg); }
+  .kitten { position:fixed; font-size:40px; z-index:9999; user-select:none; pointer-events:auto; cursor:pointer; transition:transform 0.15s; filter:none;}
   @keyframes confettiFall { 0%{transform:translateY(0) rotate(0deg);opacity:1;} 100%{transform:translateY(105vh) rotate(720deg);opacity:0;} }
   @keyframes kittenShake { 0%,100%{margin-left:0} 25%{margin-left:-6px} 75%{margin-left:6px} }
   .kitten.shaking { animation: kittenShake 0.15s infinite; }
@@ -742,7 +742,7 @@
 <div id="lightning-layer" style="background:rgba(220,230,255,0.85);"></div>
 <script>
 (function() {
-  const emojis = { normal:'🐰', bite:'🌚', party:'🥮🎊', teary:'🙈', fight:'🫈' };
+  const emojis = { normal:'🌝', bite:'🌚', party:'🥮🎊', teary:'🙈', fight:'🫈' };
   let globalState = 'normal';
   let confettiTimer = null;
   let lightningTimer = null;
@@ -756,7 +756,7 @@
   cats.forEach((k, i) => {
     const el = document.createElement('div');
     el.className = 'kitten';
-    el.textContent = '🐰';
+    el.textContent = '🌝';
     el.style.left = k.x + 'px';
     el.style.top  = k.y + 'px';
     el.addEventListener('mouseenter', () => { if (globalState === 'normal') applyState('bite'); });
