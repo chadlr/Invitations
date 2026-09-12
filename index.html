@@ -14,20 +14,25 @@
     --foam: #e0e0e0;
     --text: #FFD700;
     --light-text: #008b8b;
+    --page-bg-start: #f5f5dc;
+    --page-bg-end: #e8efe5;
+    --hero-bg-start: #008b8b;
+    --hero-bg-end: #006f6f;
+    --countdown-bg: linear-gradient(135deg, #008b8b 0%, #006f6f 100%);
+    --countdown-number-color: #ffffff;
   }
   body {
     font-family: 'Lato', sans-serif;
-    background-color: var(--cream);
+    background-color: var(--page-bg-start);
     color: var(--text);
     background-image:
-      radial-gradient(circle at 20% 20%, rgba(200,169,126,0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(168,181,162,0.08) 0%, transparent 50%);
+      linear-gradient(135deg, var(--page-bg-start), var(--page-bg-end));
     min-height: 100vh;
   }
 
   /* HERO */
   .hero {
-    background: linear-gradient(160deg, #008b8b 0%, #008b8b 50%, #006f6f 100%);
+    background: linear-gradient(160deg, var(--hero-bg-start), var(--hero-bg-end));
     color: white;
     text-align: center;
     padding: 70px 20px 60px;
@@ -112,8 +117,8 @@
 
   /* COUNTDOWN */
   .countdown-wrap { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
-  .cd-box { background: linear-gradient(135deg, #008b8b 0%, #006f6f 100%); color: white; border-radius: 14px; padding: 18px 20px; text-align: center; min-width: 78px; }
-  .cd-num { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 600; line-height: 1; color: #Ffffff; }
+  .cd-box { background: var(--countdown-bg); color: white; border-radius: 14px; padding: 18px 20px; text-align: center; min-width: 78px; }
+  .cd-num { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 600; line-height: 1; color: var(--countdown-number-color); }
   .cd-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 6px; }
   #countdown-done { display: none; text-align: center; font-family: 'Playfair Display', serif; font-size: 22px; color: #ffffff; font-style: italic; padding: 10px; }
 
@@ -254,6 +259,35 @@
     transition: color 0.2s, background 0.2s;
   }
   .food-edit:hover { color: #006064; background: #e0f7fa; }
+  .admin-portion-tools {
+    display: none;
+    position: absolute;
+    z-index: 10002;
+    gap: 4px;
+    align-items: center;
+    padding: 5px;
+    background: #fff8f0;
+    border: 1px solid #c8a97e;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(44,24,16,0.18);
+    white-space: nowrap;
+  }
+  .admin-portion-tools.is-open { display: flex; }
+  .admin-portion-tools button,
+  .admin-portion-tools input { font: 11px 'Lato', sans-serif; }
+  .admin-portion-tools button {
+    border: 1px solid #c8a97e;
+    border-radius: 5px;
+    background: white;
+    color: #4a2c2a;
+    padding: 4px 7px;
+    cursor: pointer;
+  }
+  .admin-portion-tools button:hover { background: #f5e6d0; }
+  .admin-portion-tools input[type=color] { width: 26px; height: 25px; padding: 1px; cursor: pointer; }
+  .admin-portion-tools input[type=text] { width: 84px; padding: 5px 6px; border-radius: 5px; }
+  [data-editable].admin-hidden { display: none !important; }
+  .admin-mode [data-editable].admin-hidden { display: revert !important; opacity: 0.35; text-decoration: line-through; }
 </style>
 </head>
 <body>
@@ -299,10 +333,10 @@
   <div class="section">
     <div class="section-title" data-editable="title-2">📍 The Details</div>
     <div class="section-sub" data-editable="sub-2">Mark your calendars and come as you are</div>
-    <div class="detail-row"><div class="detail-icon">📅</div><div><div class="detail-label" data-editable="detail-label-when">When</div><div class="detail-value" data-editable="detail-when">September 26, 2026 04:00 PM</div></div></div>
-    <div class="detail-row"><div class="detail-icon">📍</div><div><div class="detail-label" data-editable="detail-label-where">Where</div><div class="detail-value" data-editable="detail-where">Chester's House in Batu Maung, Penang &nbsp;<a href="https://maps.app.goo.gl/nHefEjMthNrxpPF68" target="_blank" style="color:var(--light-text);text-decoration:underline;">📍 Southbay</a></div></div></div>
-    <div class="detail-row"><div class="detail-icon">🥮</div><div><div class="detail-label" data-editable="detail-label-vibe">Vibe</div><div class="detail-value" data-editable="detail-vibe">Chill at home with some home cooking </div></div></div>
-    <div class="detail-row"><div class="detail-icon">📡</div><div><div class="detail-label" data-editable="detail-label-why">Why</div><div class="detail-value" data-editable="detail-why">Just because</div></div></div>
+    <div class="detail-row"><div class="detail-icon" data-editable="detail-icon-when">📅</div><div><div class="detail-label" data-editable="detail-label-when">When</div><div class="detail-value" data-editable="detail-when">September 26, 2026 04:00 PM</div></div></div>
+    <div class="detail-row"><div class="detail-icon" data-editable="detail-icon-where">📍</div><div><div class="detail-label" data-editable="detail-label-where">Where</div><div class="detail-value" data-editable="detail-where">Chester's House in Batu Maung, Penang &nbsp;<a href="https://maps.app.goo.gl/nHefEjMthNrxpPF68" target="_blank" style="color:var(--light-text);text-decoration:underline;">📍 Southbay</a></div></div></div>
+    <div class="detail-row"><div class="detail-icon" data-editable="detail-icon-vibe">🥮</div><div><div class="detail-label" data-editable="detail-label-vibe">Vibe</div><div class="detail-value" data-editable="detail-vibe">Chill at home with some home cooking </div></div></div>
+    <div class="detail-row"><div class="detail-icon" data-editable="detail-icon-why">📡</div><div><div class="detail-label" data-editable="detail-label-why">Why</div><div class="detail-value" data-editable="detail-why">Just because</div></div></div>
   </div>
 
   <!-- RSVP -->
@@ -361,6 +395,14 @@
   <span id="admin-saved-msg">✅ Saved!</span>
   <span id="admin-publish-msg" style="display:none;color:#c8e6c9;font-size:13px;">🚀 Published!</span>
   <span id="admin-publish-err" style="display:none;color:#ff8a80;font-size:13px;"></span>
+  <label style="color:#c8a97e;font-size:12px;margin-left:12px;">Page gradient <input type="color" id="admin-page-bg-start" title="Page gradient start" style="width:28px;height:24px;padding:1px;vertical-align:middle;"><input type="color" id="admin-page-bg-end" title="Page gradient end" style="width:28px;height:24px;padding:1px;vertical-align:middle;"></label>
+  <label style="color:#c8a97e;font-size:12px;margin-left:8px;">Hero gradient <input type="color" id="admin-hero-bg-start" title="Hero gradient start" style="width:28px;height:24px;padding:1px;vertical-align:middle;"><input type="color" id="admin-hero-bg-end" title="Hero gradient end" style="width:28px;height:24px;padding:1px;vertical-align:middle;"></label>
+  <label style="color:#c8a97e;font-size:12px;margin-left:8px;">Countdown <input type="color" id="admin-countdown-bg" title="Countdown background color" style="width:28px;height:24px;padding:1px;vertical-align:middle;"></label>
+  <label style="color:#c8a97e;font-size:12px;margin-left:8px;">Numbers <input type="color" id="admin-countdown-number" title="Countdown number color" style="width:28px;height:24px;padding:1px;vertical-align:middle;"></label>
+  <label style="color:#c8a97e;font-size:12px;margin-left:8px;">Hover <input type="text" id="admin-hover-emoji" title="Floating emoji while idle" maxlength="8" style="width:44px;padding:3px;text-align:center;"></label>
+  <label style="color:#c8a97e;font-size:12px;margin-left:8px;">Joining <input type="text" id="admin-float-yes" title="Floating emoji for Joining" maxlength="8" style="width:44px;padding:3px;text-align:center;"></label>
+  <label style="color:#c8a97e;font-size:12px;margin-left:8px;">Maybe <input type="text" id="admin-float-maybe" title="Floating emoji for Maybe" maxlength="8" style="width:44px;padding:3px;text-align:center;"></label>
+  <label style="color:#c8a97e;font-size:12px;margin-left:8px;">Can't <input type="text" id="admin-float-no" title="Floating emoji for Can't Make It" maxlength="8" style="width:44px;padding:3px;text-align:center;"></label>
   <button id="admin-save-btn" onclick="saveAdminChanges()">💾 Save</button>
   <button id="admin-publish-btn" onclick="publishToGitHub()" style="background:linear-gradient(135deg,#388e3c,#1b5e20);color:#fff;border:none;border-radius:8px;padding:8px 20px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.5px;margin-left:8px;">🚀 Publish</button>
 </div>
@@ -456,10 +498,11 @@
   // Attendance button selection
   function selectAttending(val) {
     document.getElementById('rsvp-attending').value = val;
+    if (window.setFloatingState) window.setFloatingState(val);
     const styles = {
       yes:   { active: 'border:2px solid #2e7d32;background:#2e7d32;color:#fff;', inactive: 'border:2px solid #c8e6c9;background:#f0faf0;color:#2e7d32;' },
       maybe: { active: 'border:2px solid #b38600;background:#b38600;color:#fff;', inactive: 'border:2px solid #f5e6a3;background:#fffbf0;color:#b38600;' },
-      no:    { active: 'border:2px solid #c62828;background:#c62828;color:#fff;', inactive: 'border:2px solid #f5c6c6;background:#fdf3f3;color:#c62828;' }
+      no:    { active: 'border:2px solid #e57373;background:#fde8e8;color:#c62828;', inactive: 'border:2px solid #f5c6c6;background:#fdf3f3;color:#c62828;' }
     };
     ['yes','maybe','no'].forEach(v => {
       const btn = document.getElementById('btn-' + v);
@@ -524,6 +567,106 @@
 
   // ── ADMIN MODE ──────────────────────────────────────────────────────────────
   const ADMIN_CONTENT_KEY = 'admin_content_v1';
+  let activeAdminTools = null;
+
+  function closeAdminTools() {
+    if (activeAdminTools) activeAdminTools.remove();
+    activeAdminTools = null;
+  }
+
+  function showAdminTools(el) {
+    closeAdminTools();
+    const link = el.querySelector('a');
+    const tools = document.createElement('div');
+    tools.className = 'admin-portion-tools is-open';
+    tools.innerHTML = `
+      <button type="button" data-action="delete">${el.classList.contains('admin-hidden') ? 'Restore' : 'Delete'}</button>
+      <label title="Text color"><input type="color" data-action="text-color" value="${rgbToHex(getComputedStyle(el).color)}"></label>
+      <label title="Background color"><input type="color" data-action="background-color" value="${rgbToHex(el.style.backgroundColor)}"></label>
+      ${link ? '<input type="text" data-action="link-url" value="' + link.href.replace(/"/g, '&quot;') + '" aria-label="Address link URL">' : ''}
+      <input type="text" data-action="emoji" placeholder="Emoji" aria-label="Emoji to add">
+      <button type="button" data-action="close">Done</button>`;
+    document.body.appendChild(tools);
+    const rect = el.getBoundingClientRect();
+    tools.style.left = Math.max(8, Math.min(window.innerWidth - tools.offsetWidth - 8, rect.left + window.scrollX)) + 'px';
+    tools.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+    tools.addEventListener('click', event => {
+      const action = event.target.getAttribute('data-action');
+      if (action === 'delete') {
+        el.classList.toggle('admin-hidden');
+        event.target.textContent = el.classList.contains('admin-hidden') ? 'Restore' : 'Delete';
+      } else if (action === 'close') closeAdminTools();
+    });
+    tools.addEventListener('input', event => {
+      const action = event.target.getAttribute('data-action');
+      if (action === 'text-color') el.style.color = event.target.value;
+      if (action === 'background-color') el.style.backgroundColor = event.target.value;
+      if (action === 'link-url' && link) link.href = event.target.value;
+      if (action === 'emoji' && event.target.value) {
+        el.insertAdjacentText('afterbegin', event.target.value);
+        event.target.value = '';
+      }
+    });
+    activeAdminTools = tools;
+  }
+
+  function rgbToHex(color) {
+    const hex = String(color).match(/^#([0-9a-f]{6})$/i);
+    if (hex) return '#' + hex[1].toLowerCase();
+    const match = String(color).match(/\d+/g);
+    if (!match || match.length < 3) return '#ffffff';
+    return '#' + match.slice(0, 3).map(value => Number(value).toString(16).padStart(2, '0')).join('');
+  }
+
+  function applyAdminStyles(styles) {
+    const pageBgStart = styles.pageBgStart || styles.pageBg || '#f5f5dc';
+    const pageBgEnd = styles.pageBgEnd || '#e8efe5';
+    const heroBgStart = styles.heroBgStart || styles.heroBg || '#008b8b';
+    const heroBgEnd = styles.heroBgEnd || '#006f6f';
+    const countdownBg = styles.countdownBg || '#008b8b';
+    const countdownNumber = styles.countdownNumber || '#ffffff';
+    const hoverEmojis = styles.hoverEmojis || ['🐰', '🐰'];
+    const floatingEmojis = styles.floatingEmojis || {
+      yes: ['🐰🥮🎊', '🐰🥮🎊'],
+      maybe: ['🐰', '🐰'],
+      no: ['🐰🗯️', '🐰🗯️']
+    };
+    document.documentElement.style.setProperty('--page-bg-start', pageBgStart);
+    document.documentElement.style.setProperty('--page-bg-end', pageBgEnd);
+    document.documentElement.style.setProperty('--hero-bg-start', heroBgStart);
+    document.documentElement.style.setProperty('--hero-bg-end', heroBgEnd);
+    document.documentElement.style.setProperty('--countdown-bg', countdownBg);
+    document.documentElement.style.setProperty('--countdown-number-color', countdownNumber);
+    const setAdminValue = (id, value) => {
+      const input = document.getElementById(id);
+      if (input) input.value = value;
+    };
+    setAdminValue('admin-page-bg-start', pageBgStart);
+    setAdminValue('admin-page-bg-end', pageBgEnd);
+    setAdminValue('admin-hero-bg-start', heroBgStart);
+    setAdminValue('admin-hero-bg-end', heroBgEnd);
+    setAdminValue('admin-countdown-bg', countdownBg);
+    setAdminValue('admin-countdown-number', countdownNumber);
+    setAdminValue('admin-hover-emoji', hoverEmojis[0] || '');
+    window.adminHoverEmojis = [hoverEmojis[0] || '🐰', hoverEmojis[0] || '🐰'];
+    window.adminFloatingEmojis = {
+      normal: [hoverEmojis[0] || '🐰', hoverEmojis[0] || '🐰'],
+      yes: [floatingEmojis.yes?.[0] || '🐰🥮🎊', floatingEmojis.yes?.[0] || '🐰🥮🎊'],
+      maybe: [floatingEmojis.maybe?.[0] || hoverEmojis[0] || '🐰', floatingEmojis.maybe?.[0] || hoverEmojis[0] || '🐰'],
+      no: [floatingEmojis.no?.[0] || '🐰🗯️', floatingEmojis.no?.[0] || '🐰🗯️']
+    };
+    ['yes', 'maybe', 'no'].forEach(key => {
+      const pair = window.adminFloatingEmojis[key];
+      setAdminValue('admin-float-' + key, pair[0] || '');
+    });
+  }
+
+  function setAttendanceEmoji(key, emoji) {
+    const span = document.querySelector('[data-editable="btn-' + (key === 'yes' ? 'yes' : key === 'maybe' ? 'maybe' : 'no') + '-text"]');
+    if (!span || !emoji) return;
+    const label = span.textContent.trim().replace(/^[^A-Za-z0-9]+/, '').trim();
+    span.textContent = emoji + ' ' + label;
+  }
 
   function initAdminMode() {
     if (!IS_ADMIN) return;
@@ -531,16 +674,27 @@
     document.getElementById('admin-badge').style.display = 'block';
     const bar = document.getElementById('admin-bar');
     bar.style.display = 'flex';
+    applyAdminStyles({});
     // Load saved content from localStorage and apply innerHTML
     const saved = localStorage.getItem(ADMIN_CONTENT_KEY);
     if (saved) {
       try {
         const overrides = JSON.parse(saved);
         Object.keys(overrides).forEach(key => {
-          if (key.startsWith('__ph__')) {
+          if (key === '__styles__') {
+            applyAdminStyles(overrides[key]);
+          } else if (key.startsWith('__ph__')) {
             const phKey = key.slice(6);
             const el = document.querySelector('[data-placeholder-key="' + phKey + '"]');
             if (el) el.placeholder = overrides[key];
+          } else if (overrides[key] && typeof overrides[key] === 'object') {
+            const el = document.querySelector('[data-editable="' + key + '"]');
+            if (el) {
+              el.innerHTML = overrides[key].html || '';
+              el.style.color = overrides[key].color || '';
+              el.style.backgroundColor = overrides[key].backgroundColor || '';
+              el.classList.toggle('admin-hidden', Boolean(overrides[key].hidden));
+            }
           } else {
             const el = document.querySelector('[data-editable="' + key + '"]');
             if (el) el.innerHTML = overrides[key];
@@ -551,6 +705,10 @@
     // Set contentEditable on all [data-editable] elements
     document.querySelectorAll('[data-editable]').forEach(el => {
       el.contentEditable = 'true';
+      el.addEventListener('click', event => {
+        if (el.querySelector('a')) event.preventDefault();
+        showAdminTools(el);
+      });
       // If inside a button, stop clicks from bubbling to the button's onclick
       if (el.closest('button')) {
         el.addEventListener('click', e => e.stopPropagation());
@@ -590,13 +748,49 @@
       const whenEl = document.querySelector('[data-editable="detail-when"]');
       if (whenEl) whenEl.textContent = newDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
     });
+    ['page-bg-start', 'page-bg-end', 'hero-bg-start', 'hero-bg-end', 'countdown-bg', 'countdown-number'].forEach(key => {
+      document.getElementById('admin-' + key).addEventListener('input', event => {
+        const variable = key === 'page-bg-start' ? '--page-bg-start' : key === 'page-bg-end' ? '--page-bg-end' : key === 'hero-bg-start' ? '--hero-bg-start' : key === 'hero-bg-end' ? '--hero-bg-end' : key === 'countdown-bg' ? '--countdown-bg' : '--countdown-number-color';
+        document.documentElement.style.setProperty(variable, event.target.value);
+      });
+    });
+    document.getElementById('admin-hover-emoji').addEventListener('input', event => {
+      window.adminHoverEmojis = [event.target.value, event.target.value];
+      const kittens = document.querySelectorAll('.kitten');
+      kittens.forEach(kitten => { kitten.textContent = event.target.value || '🐰'; });
+    });
+    ['yes', 'maybe', 'no'].forEach(key => {
+      document.getElementById('admin-float-' + key).addEventListener('input', event => {
+        window.adminFloatingEmojis[key] = [event.target.value, event.target.value];
+        if (window.setFloatingState) window.setFloatingState(key);
+      });
+    });
   }
 
   function saveAdminChanges() {
     const overrides = {};
     document.querySelectorAll('[data-editable]').forEach(el => {
-      overrides[el.getAttribute('data-editable')] = el.innerHTML;
+      overrides[el.getAttribute('data-editable')] = {
+        html: el.innerHTML,
+        color: el.style.color,
+        backgroundColor: el.style.backgroundColor,
+        hidden: el.classList.contains('admin-hidden')
+      };
     });
+    overrides.__styles__ = {
+      pageBgStart: document.getElementById('admin-page-bg-start').value,
+      pageBgEnd: document.getElementById('admin-page-bg-end').value,
+      heroBgStart: document.getElementById('admin-hero-bg-start').value,
+      heroBgEnd: document.getElementById('admin-hero-bg-end').value,
+      countdownBg: document.getElementById('admin-countdown-bg').value,
+      countdownNumber: document.getElementById('admin-countdown-number').value,
+      hoverEmojis: [document.getElementById('admin-hover-emoji').value, document.getElementById('admin-hover-emoji').value],
+      floatingEmojis: {
+        yes: [document.getElementById('admin-float-yes').value, document.getElementById('admin-float-yes').value],
+        maybe: [document.getElementById('admin-float-maybe').value, document.getElementById('admin-float-maybe').value],
+        no: [document.getElementById('admin-float-no').value, document.getElementById('admin-float-no').value]
+      },
+    };
     // Save placeholder edits
     document.querySelectorAll('[data-placeholder-key]').forEach(el => {
       const phKey = el.getAttribute('data-placeholder-key');
@@ -654,9 +848,25 @@
       if (saved) {
         const overrides = JSON.parse(saved);
         Object.keys(overrides).forEach(key => {
-          if (key.startsWith('__ph__')) {
+          if (key === '__styles__') {
+            const styles = overrides[key];
+            if (styles.pageBgStart || styles.pageBg) doc.documentElement.style.setProperty('--page-bg-start', styles.pageBgStart || styles.pageBg);
+            if (styles.pageBgEnd) doc.documentElement.style.setProperty('--page-bg-end', styles.pageBgEnd);
+            if (styles.heroBgStart || styles.heroBg) doc.documentElement.style.setProperty('--hero-bg-start', styles.heroBgStart || styles.heroBg);
+            if (styles.heroBgEnd) doc.documentElement.style.setProperty('--hero-bg-end', styles.heroBgEnd);
+            if (styles.countdownBg) doc.documentElement.style.setProperty('--countdown-bg', styles.countdownBg);
+            if (styles.countdownNumber) doc.documentElement.style.setProperty('--countdown-number-color', styles.countdownNumber);
+          } else if (key.startsWith('__ph__')) {
             const el = doc.querySelector('[data-placeholder-key="' + key.slice(6) + '"]');
             if (el) el.setAttribute('placeholder', overrides[key]);
+          } else if (overrides[key] && typeof overrides[key] === 'object') {
+            const el = doc.querySelector('[data-editable="' + key + '"]');
+            if (el) {
+              el.innerHTML = overrides[key].html || '';
+              if (overrides[key].color) el.style.color = overrides[key].color;
+              if (overrides[key].backgroundColor) el.style.backgroundColor = overrides[key].backgroundColor;
+              el.classList.toggle('admin-hidden', Boolean(overrides[key].hidden));
+            }
           } else {
             const el = doc.querySelector('[data-editable="' + key + '"]');
             if (el) el.innerHTML = overrides[key];
@@ -743,6 +953,8 @@
 <script>
 (function() {
   const emojis = { normal:'🐰', bite:'🐰💢', party:'🐰🥮🎊', teary:'🐰🗯️', fight:'🐰💢' };
+  const baseEmojis = window.adminHoverEmojis || ['🐰', '🐰'];
+  const floatingEmojis = window.adminFloatingEmojis || { normal: baseEmojis, yes: baseEmojis, maybe: baseEmojis, no: baseEmojis };
   let globalState = 'normal';
   let confettiTimer = null;
   let lightningTimer = null;
@@ -756,7 +968,7 @@
   cats.forEach((k, i) => {
     const el = document.createElement('div');
     el.className = 'kitten';
-    el.textContent = '🐰';
+    el.textContent = baseEmojis[i] || '🐰';
     el.style.left = k.x + 'px';
     el.style.top  = k.y + 'px';
     el.addEventListener('mouseenter', () => { if (globalState === 'normal') applyState('bite'); });
@@ -765,10 +977,13 @@
     k.el = el;
   });
 
-  function applyState(state) {
+  function applyState(state, emojiState = state) {
     globalState = state;
     cats.forEach(k => {
-      k.el.textContent = emojis[state];
+      const suffixes = { normal: '', bite: '💢', party: '🥮🎊', teary: '🗯️', fight: '💢' };
+      const pair = floatingEmojis[emojiState] || floatingEmojis[state] || floatingEmojis.normal || baseEmojis;
+      const suffix = emojiState === state ? (suffixes[state] || '') : '';
+      k.el.textContent = (pair[cats.indexOf(k)] || '🐰') + suffix;
       k.el.classList.toggle('shaking', state === 'fight');
     });
     if (state === 'party') { startConfetti(); hideWeather(); }
@@ -777,6 +992,10 @@
     else if (state === 'fight') showWeather('storm');
     else hideWeather();
   }
+  window.setFloatingState = state => {
+    const visualStates = { yes: 'party', maybe: 'teary', no: 'fight' };
+    applyState(visualStates[state] || state, state);
+  };
 
   // --- WEATHER ---
   function showWeather(type) {
