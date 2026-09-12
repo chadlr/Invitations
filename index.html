@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="--page-bg-start: #f5f5dc; --page-bg-end: #e8efe5; --hero-bg-start: #008b8b; --hero-bg-end: #003d3d; --countdown-bg: #008b8b; --countdown-number-color: #ffffff;"><head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2026 Mid Autumn Festival</title>
@@ -299,19 +299,19 @@
   <div class="hero-sub" data-editable="hero-sub"><br></div>
   <div class="hero-name" data-editable="hero-name">中秋節</div>
   <hr style="border:none;border-top:1px solid rgba(255,255,255,0.25);width:60%;margin:18px auto;">
-  <h1 data-editable="hero-h1" style="color: rgb(255, 215, 0);"><span>Let's celebrate this year's</span><br>Mid Autumn Festival</h1>
+  <h1 data-editable="hero-h1"><span>Let's celebrate this year's</span><br>Mid Autumn Festival</h1>
   <div class="hero-transition">
     <div class="company-pill">
-      <span class="co-name" data-editable="co1-name" style="color: rgb(255, 215, 0);">26th Sept 2026</span>
-      <span class="co-desc" data-editable="co1-desc" style="color: rgb(255, 215, 0);">4 PM<br></span>
+      <span class="co-name" data-editable="co1-name">26th Sept 2026</span>
+      <span class="co-desc" data-editable="co1-desc">4 PM<br></span>
     </div>
     <div class="arrow-pill" data-editable="arrow-pill"><br></div>
     <div class="company-pill">
-      <span class="co-name" data-editable="co2-name" style="color: rgb(255, 215, 0);">Chester’s House</span>
-      <span class="co-desc" data-editable="co2-desc" style="color: rgb(255, 215, 0);">Batu Maung</span>
+      <span class="co-name" data-editable="co2-name">Chester’s House</span>
+      <span class="co-desc" data-editable="co2-desc">Batu Maung</span>
     </div>
   </div>
-  <div class="hero-date" data-editable="hero-date">&nbsp;<a href="https://maps.app.goo.gl/nHefEjMthNrxpPF68" target="_blank" style="color: rgb(255, 255, 255); text-decoration: underline;">📍 Southbay</a></div>
+  <div class="hero-date" data-editable="hero-date">&nbsp;<a href="https://maps.app.goo.gl/nHefEjMthNrxpPF68" target="_blank" style="color:#FFFFFF;text-decoration:underline;">📍 Southbay</a></div>
 </div>
 
 <div class="container">
@@ -502,7 +502,7 @@
     const styles = {
       yes:   { active: 'border:2px solid #2e7d32;background:#2e7d32;color:#fff;', inactive: 'border:2px solid #c8e6c9;background:#f0faf0;color:#2e7d32;' },
       maybe: { active: 'border:2px solid #b38600;background:#b38600;color:#fff;', inactive: 'border:2px solid #f5e6a3;background:#fffbf0;color:#b38600;' },
-      no:    { active: 'border:2px solid #e57373;background:#fde8e8;color:#c62828;', inactive: 'border:2px solid #f5c6c6;background:#fdf3f3;color:#c62828;' }
+      no:    { active: 'border:2px solid #c62828;background:#c62828;color:#fff;', inactive: 'border:2px solid #f5c6c6;background:#fdf3f3;color:#c62828;' }
     };
     ['yes','maybe','no'].forEach(v => {
       const btn = document.getElementById('btn-' + v);
@@ -994,7 +994,7 @@
   }
   window.setFloatingState = state => {
     const visualStates = { yes: 'party', maybe: 'teary', no: 'fight' };
-    applyState(visualStates[state] || state, state);
+    runAnimation(visualStates[state] || state, state);
   };
 
   // --- WEATHER ---
@@ -1130,17 +1130,21 @@
   const btnMaybe = document.getElementById('btn-maybe');
   const btnNo    = document.getElementById('btn-no');
 
-  function runAnimation(state) {
-    if (animTimer) { clearTimeout(animTimer); applyState('normal'); }
+  function runAnimation(state, emojiState = state) {
+    if (animTimer) { clearTimeout(animTimer); animTimer = null; }
+    stopConfetti();
+    hideWeather();
+    applyState('normal', 'normal');
     if (state === 'fight') {
       // 0.5s pull together, then 2.5s fight with one lightning flash
       globalState = 'pull';
-      cats.forEach(k => { k.el.textContent = emojis['fight']; k.el.classList.remove('shaking'); });
+      const pair = floatingEmojis[emojiState] || floatingEmojis.fight || baseEmojis;
+      cats.forEach((k, i) => { k.el.textContent = pair[i] || '🐰'; k.el.classList.remove('shaking'); });
       showWeather('storm');
       stopLightning();
       // After 0.5s start actual fighting
       setTimeout(() => {
-        applyState('fight');
+        applyState('fight', emojiState);
         stopLightning();
         // One single lightning flash
         const el = document.getElementById('lightning-layer');
@@ -1150,19 +1154,14 @@
         setTimeout(() => { el.style.opacity = '0.6'; }, 160);
         setTimeout(() => { el.style.opacity = '0'; }, 250);
       }, 500);
-      animTimer = setTimeout(() => applyState('normal'), 3000);
+      animTimer = setTimeout(() => applyState('normal', 'normal'), 3000);
     } else {
-      applyState(state);
-      animTimer = setTimeout(() => applyState('normal'), 3000);
+      applyState(state, emojiState);
+      animTimer = setTimeout(() => applyState('normal', 'normal'), 3000);
     }
   }
-
-  btnYes  .addEventListener('click', () => runAnimation('party'));
-  btnMaybe.addEventListener('click', () => runAnimation('teary'));
-  btnNo   .addEventListener('click', () => runAnimation('fight'));
 })();
 </script>
-
 
 
 
