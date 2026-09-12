@@ -742,7 +742,7 @@
 <div id="lightning-layer" style="background:rgba(220,230,255,0.85);"></div>
 <script>
 (function() {
-  const emojis = { normal:'🌝', bite:'🌚', party:'🥮🎊', teary:'🌑', fight:'🐰💢' };
+  const emojis = { normal:'🐰', bite:'🐰💢', party:'🥮🎊', teary:'🐰🗯️', fight:'🐰💢' };
   let globalState = 'normal';
   let confettiTimer = null;
   let lightningTimer = null;
@@ -756,7 +756,7 @@
   cats.forEach((k, i) => {
     const el = document.createElement('div');
     el.className = 'kitten';
-    el.textContent = '🌝';
+    el.textContent = '🐰';
     el.style.left = k.x + 'px';
     el.style.top  = k.y + 'px';
     el.addEventListener('mouseenter', () => { if (globalState === 'normal') applyState('bite'); });
